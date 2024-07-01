@@ -13,6 +13,10 @@ export default function App({ Component, pageProps }) {
       theme={{
         hashed: false,
         components: {
+          Spin:{
+            colorPrimary: "#7288FA",
+
+          },
           Button: {
             colorPrimary: "#7288FA",
             algorithm: true, // Enable algorithm
@@ -48,6 +52,7 @@ const AuthWrapper = ({ children }) => {
       !token &&
       router.pathname !== "/login" &&
       !router.pathname.startsWith("/validation") &&
+      !router.pathname.startsWith("/activate") &&
       router.pathname !== "/signup"
     ) {
       router.push("/login");

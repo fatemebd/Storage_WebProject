@@ -10,3 +10,6 @@ export const Register = async (data) => {
 export const GetUser = async () => {
   return callApi("/accounts/detail/", null, "get");
 };
+export const PostActivation = async (token) => {
+  return callApi(`/accounts/activate/?activation=${token}`, null, "get");
+};
