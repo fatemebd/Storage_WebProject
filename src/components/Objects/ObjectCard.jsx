@@ -36,7 +36,13 @@ const ObjectCard = ({ object }) => {
   useEffect(() => {
     console.log(object.icon);
     switch (object.icon) {
-      case "jpg" || "png" || "svg":
+      case "jpg":
+        setIcon(image);
+        break;
+      case "png":
+        setIcon(image);
+        break;
+      case "svg":
         setIcon(image);
         break;
       case "pdf":
@@ -50,12 +56,6 @@ const ObjectCard = ({ object }) => {
         break;
       default:
         setIcon(other);
-    }
-  }, [object]);
-
-  useEffect(() => {
-    switch (object.icon) {
-      case "jpg" | "png" | "svg":
     }
   }, [object]);
 
@@ -131,8 +131,8 @@ const ObjectCard = ({ object }) => {
       <Col span={12}>
         <Typography className="font-semibold">{object.object_name} </Typography>
         <Typography className="text-[#717984] text-nowrap	">
-          {Math.round((object.size /( 1024*1024)) * 100) / 100}MB-{object.time},
-          {object.date}
+          {Math.round((object.size / (1024 * 1024)) * 100) / 100}MB-
+          {object.time},{object.date}
         </Typography>
       </Col>
       <Col span={2} className="pl-2">

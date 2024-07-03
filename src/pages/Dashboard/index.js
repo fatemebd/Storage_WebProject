@@ -3,7 +3,7 @@ import logo from "../../../public/logo/header_logo.svg";
 import avatar from "../../../public/Avatar.png";
 
 import {
-  Avatar,
+  Spin,
   Button,
   Col,
   Flex,
@@ -17,7 +17,9 @@ import {
   SearchOutlined,
   CloudUploadOutlined,
   InboxOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
+
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { GetObjects, GetUser, PostObject } from "../api/APIs";
@@ -30,9 +32,10 @@ const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const [fileList, setFileList] = useState();
   const { token } = useAuth();
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
+  const [uploadLoading, setUploadLoading] = useState(false);
   const getUser = async () => {
     try {
       const response = await GetUser();
@@ -85,6 +88,7 @@ const Dashboard = () => {
     //   console.log(file);
     // });
     formData.append("file", fileList);
+    setUploadLoading(true);
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_URL}/objects/`,
@@ -97,8 +101,11 @@ const Dashboard = () => {
         }
       );
       toast.success("Your file uploaded successfully!");
+      setUploadLoading(false);
+      getObjects()
     } catch (err) {
       toast.error("An error accured");
+      setUploadLoading(false);
     }
 
     setVisible(false);
@@ -129,8 +136,20 @@ const Dashboard = () => {
         onOk={handleOk}
         onCancel={handleCancel}
         footer={
-          <Button className="mt-3" type="primary" onClick={handleOk}>
-            Upload
+          <Button
+            disabled={uploadLoading}
+            className="mt-3"
+            type="primary"
+            onClick={handleOk}
+          >
+            {uploadLoading ? "Uploading" : "Upload"}
+            {uploadLoading && (
+              <Spin
+              
+                indicator={<LoadingOutlined spin />}
+                size="small"
+              />
+            )}
           </Button>
         }
       >
@@ -143,7 +162,7 @@ const Dashboard = () => {
           </p>
         </Dragger>
       </Modal>
-      <Row className="items-center" gutter={[16,16]}>
+      <Row className="items-center" gutter={[16, 16]}>
         <Col md={8}>
           <Image md={6} src={logo} className="bg-transparent" />
         </Col>
@@ -194,7 +213,6 @@ const Dashboard = () => {
         </Row>
         <Row className="w-full flex justify-center">
           <Pagination
-          
             align="center"
             current={page}
             onChange={(p) => setPage(p)}
