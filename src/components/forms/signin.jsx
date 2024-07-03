@@ -36,7 +36,7 @@ const SignIn = () => {
           className="shadow"
           size="large"
           variant="borderless"
-          onChange={(e) => setData({ ...data, email: e.target.value })}
+          onChange={(e) => setData({ ...data, username: e.target.value })}
           placeholder="Enter your Username or Email"
         />
       </Form.Item>

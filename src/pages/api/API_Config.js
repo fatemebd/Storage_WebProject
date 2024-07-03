@@ -16,7 +16,7 @@ let token = getToken();
 console.log(token);
 const httpClient = axios.create({
   baseURL: API_URL,
-  responseType: "json",
+  // responseType: "json",
   timeout: 50000,
   mode: "cors",
   cache: "no-cache",
@@ -24,12 +24,9 @@ const httpClient = axios.create({
   maxBodyLength: Infinity,
   headers: {
     Accept: "*/*",
-    "Content-Type": "text/json",
-    Authorization:
-      // token && token !== "undefined"
-      // ?
-      `Token 6fae13c6e2978c10756305103d9c8f83ee6d1ce5`,
-    // : null,
+    "Content-Type": "application/json",
+    Authorization: token && token !== "undefined" ? `Token ${token}` : null,
+    // `Token 6fae13c6e2978c10756305103d9c8f83ee6d1ce5`,
   },
 });
 

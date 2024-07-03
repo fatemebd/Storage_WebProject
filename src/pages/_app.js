@@ -42,12 +42,12 @@ export default function App({ Component, pageProps }) {
   );
 }
 const AuthWrapper = ({ children }) => {
-  const token = true;
-  // const { token } = useAuth();
+  // const token = true;
+  const { token } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    console.log(router.pathname);
+    console.log(token);
     if (
       !token &&
       router.pathname !== "/login" &&
@@ -55,7 +55,11 @@ const AuthWrapper = ({ children }) => {
       !router.pathname.startsWith("/activate") &&
       router.pathname !== "/signup"
     ) {
+      // console.log(router.pathname);
       router.push("/login");
+    }
+    else if(token){
+      router.push("/")
     }
   }, [token, router.pathname]);
 

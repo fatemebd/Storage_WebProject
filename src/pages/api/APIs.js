@@ -13,3 +13,6 @@ export const GetUser = async () => {
 export const PostActivation = async (token) => {
   return callApi(`/accounts/activate/?activation=${token}`, null, "get");
 };
+export const GetObjects = async (page) => {
+  return callApi(`objects/?page=${page}`, null, "get");
+};

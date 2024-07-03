@@ -1,7 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
-import { Signin } from "@/pages/api/APIs";
+import { GetUser, Signin } from "@/pages/api/APIs";
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -12,7 +13,8 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
-    } else {
+    } 
+    else if (!router.pathname.startsWith("/activate")) {
       router.push("/login"); // Redirect to login if no token found
     }
   }, []);
@@ -39,8 +41,17 @@ export const AuthProvider = ({ children }) => {
     router.push("/login");
   };
 
+  const getUser = () => {
+    try {
+      const response = GetUser();
+      return response.data.user;
+    } catch (err) {
+      toast.error("err.message");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, login, logout, getUser }}>
       {children}
     </AuthContext.Provider>
   );
