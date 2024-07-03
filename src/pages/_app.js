@@ -13,9 +13,8 @@ export default function App({ Component, pageProps }) {
       theme={{
         hashed: false,
         components: {
-          Spin:{
+          Spin: {
             colorPrimary: "#7288FA",
-
           },
           Button: {
             colorPrimary: "#7288FA",
@@ -23,7 +22,9 @@ export default function App({ Component, pageProps }) {
             defaultHoverColor: "#7288FA",
           },
         },
-        token: {},
+        token: {
+          colorPrimary: "#7288FA",
+        },
       }}
     >
       <AuthProvider>
@@ -57,9 +58,8 @@ const AuthWrapper = ({ children }) => {
     ) {
       // console.log(router.pathname);
       router.push("/login");
-    }
-    else if(token){
-      router.push("/")
+    } else if (token) {
+      router.push("/");
     }
   }, [token, router.pathname]);
 

@@ -2,7 +2,17 @@ import Image from "next/image";
 import logo from "../../../public/logo/header_logo.svg";
 import avatar from "../../../public/Avatar.png";
 
-import { Avatar, Button, Col, Flex, Input, Modal, Row, Typography } from "antd";
+import {
+  Avatar,
+  Button,
+  Col,
+  Flex,
+  Input,
+  Modal,
+  Pagination,
+  Row,
+  Typography,
+} from "antd";
 import {
   SearchOutlined,
   CloudUploadOutlined,
@@ -133,7 +143,7 @@ const Dashboard = () => {
           </p>
         </Dragger>
       </Modal>
-      <Row className="items-center">
+      <Row className="items-center" gutter={[16,16]}>
         <Col md={8}>
           <Image md={6} src={logo} className="bg-transparent" />
         </Col>
@@ -181,6 +191,15 @@ const Dashboard = () => {
               <ObjectCard className="h-full" object={object} />
             </Col>
           ))}
+        </Row>
+        <Row className="w-full flex justify-center">
+          <Pagination
+          
+            align="center"
+            current={page}
+            onChange={(p) => setPage(p)}
+            total={objects.length}
+          />
         </Row>
       </Flex>
     </main>
