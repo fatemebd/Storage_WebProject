@@ -25,7 +25,7 @@ const httpClient = axios.create({
   headers: {
     Accept: "*/*",
     "Content-Type": "application/json",
-    Authorization: token && token !== "undefined" ? `Token ${token}` : null,
+    Authorization: (token && token != "undefined") ? `Token ${token}` : null,
     // `Token 6fae13c6e2978c10756305103d9c8f83ee6d1ce5`,
   },
 });

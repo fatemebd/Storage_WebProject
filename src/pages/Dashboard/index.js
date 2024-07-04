@@ -28,27 +28,32 @@ import Dragger from "antd/es/upload/Dragger";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 const Dashboard = () => {
-  const [user, setUser] = useState({});
+  // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
   const [fileList, setFileList] = useState();
-  const { token } = useAuth();
-  const [page, setPage] = useState(2);
+  const { token, getUser, user } = useAuth();
+  const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const [uploadLoading, setUploadLoading] = useState(false);
-  const getUser = async () => {
-    try {
-      const response = await GetUser();
-      console.log(response);
-      setUser(response.data.user);
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
+  const [totalObjects, setTotalObj] = useState(0);
+  // const getUser = async () => {
+  //   try {
+  //     const response = await GetUser();
+  //     console.log(response);
+  //     setUser(response.data.user);
+  //   } catch (err) {
+  //     toast.error(err.message);
+  //   }
+  // };
+  // useEffect(() => {
+  //   getUser();
+  // }, [token]);
   const getObjects = async () => {
     try {
       const response = await GetObjects(page);
       setObjects(response.data.objects);
+      setTotalObj(response.data.count);
       console.log(response.data.objects);
     } catch (err) {
       toast.error(err.message);
@@ -69,8 +74,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     getUser();
-    getObjects();
-  }, []);
+    console.log(token);
+  }, [token]);
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      getObjects();
+    }
+  }, [user, page]);
   useEffect(() => {
     if (objects != undefined) {
       const size = calculateTotalSize(objects);
@@ -102,7 +113,7 @@ const Dashboard = () => {
       );
       toast.success("Your file uploaded successfully!");
       setUploadLoading(false);
-      getObjects()
+      getObjects();
     } catch (err) {
       toast.error("An error accured");
       setUploadLoading(false);
@@ -144,11 +155,7 @@ const Dashboard = () => {
           >
             {uploadLoading ? "Uploading" : "Upload"}
             {uploadLoading && (
-              <Spin
-              
-                indicator={<LoadingOutlined spin />}
-                size="small"
-              />
+              <Spin indicator={<LoadingOutlined spin />} size="small" />
             )}
           </Button>
         }
@@ -188,7 +195,7 @@ const Dashboard = () => {
             <Col>
               <Row justify="center" className="gap-2 items-center">
                 <Image width={45} src={avatar} className="rounded-full" />
-                <Typography>{user.username}</Typography>
+                <Typography>{user?.username}</Typography>
               </Row>
             </Col>
           </Row>
@@ -204,10 +211,10 @@ const Dashboard = () => {
             GB
           </Typography>{" "}
         </Typography>
-        <Row gutter={[20, 16]}>
+        <Row gutter={[20, 16]} className="w-full">
           {objects.map((object, index) => (
-            <Col md={6} sm={12} xs={24} key={index}>
-              <ObjectCard className="h-full" object={object} />
+            <Col  md={6} sm={12} xs={24} key={index}>
+              <ObjectCard className="h-full w-full" object={object} />
             </Col>
           ))}
         </Row>
@@ -216,7 +223,7 @@ const Dashboard = () => {
             align="center"
             current={page}
             onChange={(p) => setPage(p)}
-            total={objects.length}
+            total={totalObjects}
           />
         </Row>
       </Flex>

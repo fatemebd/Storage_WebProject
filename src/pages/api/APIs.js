@@ -16,3 +16,15 @@ export const PostActivation = async (token) => {
 export const GetObjects = async (page) => {
   return callApi(`objects/?page=${page}`, null, "get");
 };
+export const GetAllUsers = async () => {
+  return callApi(`/accounts/users/`, null, "get");
+};
+export const PostAccess = async (data) => {
+  return callApi(`/access/`, data, "post");
+};
+export const DeleteObject = async (id) => {
+  return callApi(`/objects/${id}`, null, "delete");
+};
+export const DownloadUrl = async (id) => {
+  return callApi(`/objects/${id}`, null, "get");
+};
