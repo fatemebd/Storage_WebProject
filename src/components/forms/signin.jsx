@@ -23,12 +23,12 @@ const SignIn = () => {
     >
       <Typography className="text-5xl font-extrabold mb-12">Login</Typography>
       <Form.Item
-        label="Username | Email"
+        label="Email"
         name="username"
         rules={[
           {
             required: true,
-            message: "Please input your username!",
+            message: "Please input your email!",
           },
         ]}
       >
@@ -36,7 +36,7 @@ const SignIn = () => {
           className="shadow"
           size="large"
           variant="borderless"
-          onChange={(e) => setData({ ...data, username: e.target.value })}
+          onChange={(e) => setData({ ...data, email: e.target.value })}
           placeholder="Enter your Username or Email"
         />
       </Form.Item>

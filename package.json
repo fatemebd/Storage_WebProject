@@ -9,8 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "antd": "^5.18.3",
+    "@ckeditor/ckeditor5-react": "^8.0.0",
+    "antd": "^5.19.1",
     "axios": "^1.7.2",
+    "ckeditor5": "^42.0.1",
+    "ckeditor5-premium-features": "^42.0.1",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",

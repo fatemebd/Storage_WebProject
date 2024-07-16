@@ -13,7 +13,6 @@ const getToken = () => {
   }
 };
 let token = getToken();
-console.log(token);
 const httpClient = axios.create({
   baseURL: API_URL,
   // responseType: "json",
@@ -23,10 +22,12 @@ const httpClient = axios.create({
   credentials: "same-origin",
   maxBodyLength: Infinity,
   headers: {
-    Accept: "*/*",
+    Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: (token && token != "undefined") ? `Token ${token}` : null,
-    // `Token 6fae13c6e2978c10756305103d9c8f83ee6d1ce5`,
+    Authorization:
+      token && token != "undefined"
+        ? `Bearer ${localStorage.getItem("token")}`
+        : null,
   },
 });
 
@@ -39,3 +40,45 @@ export async function callApi(url, body, method = "post", config, headers) {
     ...config,
   });
 }
+
+// "use client";
+
+// import axios from "axios";
+
+// export const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
+
+// const httpClient = axios.create({
+//   baseURL: API_URL,
+//   timeout: 50000,
+//   mode: "cors",
+//   cache: "no-cache",
+//   credentials: "same-origin",
+//   maxBodyLength: Infinity,
+//   headers: {
+//     Accept: "*/*",
+//     "Content-Type": "application/json",
+//   },
+// });
+
+// httpClient.interceptors.request.use(
+//   (config) => {
+//     const token = sessionStorage.getItem("token");
+//     if (token && token !== "undefined") {
+//       config.headers.Authorization = `Token ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// export async function callApi(url, body, method = "post", config, headers) {
+//   return httpClient({
+//     method: method,
+//     url: url,
+//     data: body,
+//     headers: headers,
+//     ...config,
+//   });
+// }

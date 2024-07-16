@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { useRouter } from "next/router";
 import Dashboard from "./Dashboard";
 import { ConfigProvider } from "antd";
+import "@/styles/editor.css"
 
 export default function App({ Component, pageProps }) {
   return (
@@ -48,7 +49,6 @@ const AuthWrapper = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(token);
     if (
       !token &&
       router.pathname !== "/login" &&

@@ -35,7 +35,7 @@ const SignUp = () => {
       <Typography className="text-5xl font-extrabold mb-12">
         Create Account
       </Typography>
-      <Form.Item
+      {/* <Form.Item
         label="Username"
         name="username"
         rules={[
@@ -52,7 +52,7 @@ const SignUp = () => {
           onChange={(e) => setData({ ...data, username: e.target.value })}
           placeholder="Enter your Username"
         />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item
         label="Email"
         name="email"
