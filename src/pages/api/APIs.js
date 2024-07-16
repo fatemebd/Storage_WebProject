@@ -28,3 +28,6 @@ export const DeleteObject = async (id) => {
 export const DownloadUrl = async (id) => {
   return callApi(`/objects/${id}`, null, "get");
 };
+export const DeleteAccount = async () => {
+  return callApi(`/user/details/`, null, "delete");
+};

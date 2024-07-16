@@ -12,6 +12,8 @@ import {
   Pagination,
   Row,
   Typography,
+  Avatar,
+  Dropdown,
 } from "antd";
 import {
   SearchOutlined,
@@ -23,7 +25,7 @@ import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { GetObjects, GetUser, PostObject } from "../api/APIs";
+import { DeleteAccount, GetObjects, GetUser, PostObject } from "../api/APIs";
 import ObjectCard from "@/components/Objects/ObjectCard";
 import Dragger from "antd/es/upload/Dragger";
 import axios from "axios";
@@ -34,24 +36,36 @@ import Note from "@/components/Modals/Note";
 const Dashboard = () => {
   // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
-  const { token, getUser, user } = useAuth();
+  const { token, getUser, user, logout } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const [totalObjects, setTotalObj] = useState(0);
+  const items = [
+    {
+      key: 1,
+      danger: true,
+      label: "Log Out",
+      // icon: <IoExitOutline size={20} />,
+      onClick: () => {
+        logout();
 
-  // const getUser = async () => {
-  //   try {
-  //     const response = await GetUser();
-  //     console.log(response);
-  //     setUser(response.data.user);
-  //   } catch (err) {
-  //     toast.error(err.message);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getUser();
-  // }, [token]);
+        cookies.remove("access_token");
+        // navigate("/");
+      },
+    },
+    {
+      key: 2,
+      danger: true,
+      label: "Delete Aaccount",
+      // icon: <IoExitOutline size={20} />,
+      onClick: () => {
+        DeleteAccount();
+        // cookies.remove("access_token");
+        // navigate("/");
+      },
+    },
+  ];
   const getObjects = async () => {
     try {
       const response = await GetObjects(page);
@@ -62,8 +76,7 @@ const Dashboard = () => {
       toast.error(err.message);
     }
   };
- 
- 
+
   const showModal = () => {
     setVisible(true);
   };
@@ -130,7 +143,13 @@ const Dashboard = () => {
             </Button>
             <Col>
               <Row justify="center" className="gap-2 items-center">
-                <Image width={45} src={avatar} className="rounded-full" />
+                <Dropdown key="1" menu={{ items }} trigger={["click"]}>
+                  <Avatar
+                    src={
+                      <Image width={45} src={avatar} className="rounded-full" />
+                    }
+                  />
+                </Dropdown>
                 <Typography>{user?.username}</Typography>
               </Row>
             </Col>
@@ -139,7 +158,7 @@ const Dashboard = () => {
       </Row>
       <Flex className=" mt-10 flex flex-col justify-start p-5 w-full min-h-10 gap-5 items-start rounded-xl bg-grey-1000 px-5 py-10 shadow-lg">
         <Typography className="text-5xl font-bold">All Notes</Typography>
-    
+
         <Row gutter={[20, 16]} className="w-full">
           {objects.map((object, index) => (
             <Col md={6} sm={12} xs={24} key={index}>

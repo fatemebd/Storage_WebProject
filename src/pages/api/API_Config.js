@@ -26,7 +26,7 @@ const httpClient = axios.create({
     "Content-Type": "application/json",
     Authorization:
       token && token != "undefined"
-        ? `Bearer ${localStorage.getItem("token")}`
+        ? `Bearer ${token}`
         : null,
   },
 });
