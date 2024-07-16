@@ -29,26 +29,19 @@ import Dragger from "antd/es/upload/Dragger";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 // import MyModal from "@/components/Inputs/Editor";
+import Note from "@/components/Modals/Note";
 
-const Editor = dynamic(() => import("@/components/Inputs/Editor"), {
-  ssr: false,
-});
 
 const Dashboard = () => {
   // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
-  const [fileList, setFileList] = useState([]);
   const { token, getUser, user } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
-  const [uploadLoading, setUploadLoading] = useState(false);
   const [totalObjects, setTotalObj] = useState(0);
-  const [text, setTesxt] = useState("hiiiiiiiiii");
-  const [hasFile, setHasFile] = useState(false);
-  useEffect(() => {
-    console.log(text);
-  }, [text]);
+
+
   // const getUser = async () => {
   //   try {
   //     const response = await GetUser();
@@ -85,12 +78,6 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    console.log(user);
-    if (user) {
-      getObjects();
-    }
-  }, [user, page]);
-  useEffect(() => {
     if (objects != undefined) {
       const size = calculateTotalSize(objects);
       setTotalSize(size);
@@ -99,102 +86,11 @@ const Dashboard = () => {
   const showModal = () => {
     setVisible(true);
   };
-const handleOk = async ()=>{
+
   
-}
-  const handleUploadFile = async () => {
-    const formData = new FormData();
-    console.log(fileList);
-    fileList.forEach((file) => {
-      // console.log(file);
-      formData.append("file", fileList);
-    });
-    setUploadLoading(true);
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/objects/`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Token ${token}`,
-          },
-        }
-      );
-      toast.success("Your file uploaded successfully!");
-      setUploadLoading(false);
-      getObjects();
-    } catch (err) {
-      toast.error("An error accured");
-      setUploadLoading(false);
-    }
-
-    setVisible(false);
-    setFileList([]);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
-  };
-  const props = {
-    name: "file",
-    className: "mt-5",
-    multiple: true,
-    beforeUpload: (file) => {
-      setFileList([...fileList,file]);
-      return false;
-    },
-    onRemove: (file) => {
-      setFileList(null);
-    },
-  };
-  useEffect(() => {
-    console.log(fileList);
-    if (fileList.length > 0) {
-      setHasFile(true);
-    } else {
-      setHasFile(false);
-    }
-  }, [fileList]);
   return (
     <main className="bg-white h-full md:h-screen p-5 ">
-      <Modal
-        title="New Note"
-        open={visible}
-        // onOk={handleOk}
-        onCancel={handleCancel}
-        footer={
-          <Button
-            disabled={uploadLoading}
-            className="mt-3"
-            type="primary"
-            onClick={handleOk}
-          >
-            {uploadLoading ? "Uploading" : "Done"}
-            {uploadLoading && (
-              <Spin indicator={<LoadingOutlined spin />} size="small" />
-            )}
-          </Button>
-        }
-      >
-        <Col className="flex flex-col">
-          <Editor
-            className="mb-5"
-            visible={visible}
-            onClose={() => setVisible(false)}
-            initialText={text}
-            onSave={setTesxt}
-          ></Editor>
-          <Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-              <InboxOutlined />
-            </p>
-            <p className="ant-upload-text">
-              Click to pick a file, or simply drag and drop{" "}
-            </p>
-          </Dragger>
-        </Col>
-      </Modal>
+  <Note visible={visible} setVisible={setVisible} />
       {/* <Modal
         title="Upload"
         open={visible}
