@@ -1,15 +1,4 @@
-import {
-  Button,
-  Col,
-  Flex,
-  Row,
-  Typography,
-  Menu,
-  Dropdown,
-  Space,
-  Modal,
-} from "antd";
-import Image from "next/image";
+import { Button, Col, Row, Typography, Dropdown, Modal } from "antd";
 import { useEffect, useState } from "react";
 import {
   MoreOutlined,
@@ -17,86 +6,24 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
-import music from "../../../public/logo/music.png";
-import pdf from "../../../public/logo/Logo PDF.png";
-import video from "../../../public/logo/video.png";
-import image from "../../../public/logo/Image.png";
-const { Paragraph, Text } = Typography;
-
-import other from "../../../public/logo/Others file.png";
-import UsersList from "../Modals/UsersList";
-import { DeleteObject, DownloadUrl } from "@/pages/api/APIs";
+const { Paragraph } = Typography;
+import { DeleteObject } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
 import Note from "../Modals/Note";
+
 const ObjectCard = ({ object }) => {
-  const [icon, setIcon] = useState();
   const [items, setItems] = useState([]);
   const [shareOpen, setShareOpen] = useState(false);
-  const [selected, setSelected] = useState([]);
   const [shareUrl, setShareUrl] = useState();
   const [visible, setVisible] = useState(false);
+
   useEffect(() => {
-    // console.log(object);
-    // if (object.is_owner) {
     setItems(ownerItems);
-    // console.log(object);
     if (object.title) {
       setShareUrl(`localhost:3000/shared/${object.id}_${object.edit_key}`);
     }
-    // } else {
-    //   setItems(userItems);
-    // }
   }, []);
 
-  // const getDownloadUrl = async () => {
-  //   console.log(object.object_id);
-  //   try {
-  //     const response = await DownloadUrl(object.object_id);
-  //     setDownloadUrl(response.data.link);
-  //   } catch (err) {
-  //     toast.error(err.message);
-  //   }
-  // };
-
-  useEffect(() => {
-    setSelected(object.users);
-    // getDownloadUrl();
-    switch (object.icon) {
-      case "jpg":
-        setIcon(image);
-        break;
-      case "png":
-        setIcon(image);
-        break;
-      case "svg":
-        setIcon(image);
-        break;
-      case "pdf":
-        setIcon(pdf);
-        break;
-      case "mkv":
-        setIcon(video);
-        break;
-      case "mp3":
-        setIcon(music);
-        break;
-      default:
-        setIcon(other);
-    }
-  }, [object]);
-
-  // const userItems = [
-  //   {
-  //     key: "1",
-  //     icon: <DownloadOutlined className="text-[#7288FA]" />,
-  //     label: (
-  //       <a download href={downloadUrl}>
-  //         Download{" "}
-  //       </a>
-  //     ),
-  //     //   icon: <SmileOutlined />,
-  //   },
-  // ];
   const ownerItems = [
     {
       key: "1",
@@ -114,7 +41,6 @@ const ObjectCard = ({ object }) => {
       onClick: () => {
         setVisible(true);
       },
-      //   icon: <SmileOutlined />,
     },
     {
       key: "3",
@@ -146,11 +72,6 @@ const ObjectCard = ({ object }) => {
         object={object}
       />
 
-      {/* <Col>
-        <Flex className="p-2 rounded-full bg-[#F1F4FF] ">
-          <Image src={icon} />
-        </Flex>
-      </Col> */}
       <Col span={12}>
         <Typography className="font-semibold">{object.title} </Typography>
         <Typography className="text-[#717984] text-nowrap	">
