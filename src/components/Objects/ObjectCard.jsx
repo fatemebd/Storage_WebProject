@@ -7,53 +7,60 @@ import {
   Menu,
   Dropdown,
   Space,
+  Modal,
 } from "antd";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import {
   MoreOutlined,
   ShareAltOutlined,
-  DownloadOutlined,
+  EditOutlined,
   DeleteOutlined,
 } from "@ant-design/icons";
 import music from "../../../public/logo/music.png";
 import pdf from "../../../public/logo/Logo PDF.png";
 import video from "../../../public/logo/video.png";
 import image from "../../../public/logo/Image.png";
+const { Paragraph, Text } = Typography;
 
 import other from "../../../public/logo/Others file.png";
 import UsersList from "../Modals/UsersList";
 import { DeleteObject, DownloadUrl } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
+import Note from "../Modals/Note";
 const ObjectCard = ({ object }) => {
   const [icon, setIcon] = useState();
   const [items, setItems] = useState([]);
-  const [listOpen, setListOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [downloadUrl, setDownloadUrl] = useState();
-
+  const [shareUrl, setShareUrl] = useState();
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    console.log(object);
-    if (object.is_owner) {
-      setItems(ownerItems);
-    } else {
-      setItems(userItems);
+    // console.log(object);
+    // if (object.is_owner) {
+    setItems(ownerItems);
+    // console.log(object);
+    if (object.title) {
+      setShareUrl(`localhost:3000/shared/${object.id}_${object.edit_key}`);
     }
+    // } else {
+    //   setItems(userItems);
+    // }
   }, []);
 
-  const getDownloadUrl = async () => {
-    console.log(object.object_id);
-    try {
-      const response = await DownloadUrl(object.object_id);
-      setDownloadUrl(response.data.link);
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
+  // const getDownloadUrl = async () => {
+  //   console.log(object.object_id);
+  //   try {
+  //     const response = await DownloadUrl(object.object_id);
+  //     setDownloadUrl(response.data.link);
+  //   } catch (err) {
+  //     toast.error(err.message);
+  //   }
+  // };
 
   useEffect(() => {
     setSelected(object.users);
-    getDownloadUrl();
+    // getDownloadUrl();
     switch (object.icon) {
       case "jpg":
         setIcon(image);
@@ -78,35 +85,35 @@ const ObjectCard = ({ object }) => {
     }
   }, [object]);
 
-  const userItems = [
-    {
-      key: "1",
-      icon: <DownloadOutlined className="text-[#7288FA]" />,
-      label: (
-        <a download href={downloadUrl}>
-          Download{" "}
-        </a>
-      ),
-      //   icon: <SmileOutlined />,
-    },
-  ];
+  // const userItems = [
+  //   {
+  //     key: "1",
+  //     icon: <DownloadOutlined className="text-[#7288FA]" />,
+  //     label: (
+  //       <a download href={downloadUrl}>
+  //         Download{" "}
+  //       </a>
+  //     ),
+  //     //   icon: <SmileOutlined />,
+  //   },
+  // ];
   const ownerItems = [
     {
       key: "1",
       icon: <ShareAltOutlined className="text-[#F9AB72]" />,
       label: "Share",
-      onClick: () => {
-        setListOpen(true);
+      onClick: (e) => {
+        console.log(object);
+        setShareOpen(true);
       },
     },
     {
       key: "2",
-      icon: <DownloadOutlined className="text-[#7288FA]" />,
-      label: (
-        <a download href={downloadUrl}>
-          Download{" "}
-        </a>
-      ),
+      icon: <EditOutlined className="text-[#7288FA]" />,
+      label: "Edit",
+      onClick: () => {
+        setVisible(true);
+      },
       //   icon: <SmileOutlined />,
     },
     {
@@ -131,17 +138,23 @@ const ObjectCard = ({ object }) => {
       align="center"
       justify="space-between"
     >
-      <Col>
+      <Note
+        isUpdate={true}
+        isCreate={false}
+        visible={visible}
+        setVisible={setVisible}
+        object={object}
+      />
+
+      {/* <Col>
         <Flex className="p-2 rounded-full bg-[#F1F4FF] ">
           <Image src={icon} />
         </Flex>
-      </Col>
+      </Col> */}
       <Col span={12}>
-        <Typography className="font-semibold">{object.object_name} </Typography>
+        <Typography className="font-semibold">{object.title} </Typography>
         <Typography className="text-[#717984] text-nowrap	">
-          {Math.round((object.size / (1024 * 1024)) * 100) / 100}MB-{" "}
-          {object.created_time.split("T")[1].split(".")[0]}, {" "}
-          {object.created_time.split("T")[0]}
+          {object.content}
         </Typography>
       </Col>
       <Col span={2} className="pl-2">
@@ -150,14 +163,15 @@ const ObjectCard = ({ object }) => {
             <MoreOutlined className="text-black" />
           </Button>
         </Dropdown>
-        <UsersList
-          open={listOpen}
-          setOpen={setListOpen}
-          selected={selected}
-          setSelected={setSelected}
-          objectId={object.object_id}
-        />
       </Col>
+      <Modal
+        open={shareOpen}
+        title="Share Url"
+        onCancel={() => setShareOpen(false)}
+        onOk={() => setShareOpen(false)}
+      >
+        <Paragraph copyable>{shareUrl}</Paragraph>
+      </Modal>
     </Row>
   );
 };

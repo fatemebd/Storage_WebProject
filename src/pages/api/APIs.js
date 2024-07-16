@@ -13,8 +13,11 @@ export const GetUser = async () => {
 export const PostActivation = async (data) => {
   return callApi(`/user/verify/`, data, "post");
 };
-export const GetObjects = async (page) => {
-  return callApi(`objects/?page=${page}`, null, "get");
+export const GetObjects = async () => {
+  return callApi(`/notes/`, null, "get");
+};
+export const GetNote = async (id) => {
+  return callApi(`/notes/${id}`, null, "get");
 };
 export const GetAllUsers = async () => {
   return callApi(`/accounts/users/`, null, "get");

@@ -17,7 +17,7 @@ import { CreateNote } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
-const Note = ({ visible, setVisible, isCreate }) => {
+const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
   const [fileList, setFileList] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [data, setData] = useState({});
@@ -25,40 +25,46 @@ const Note = ({ visible, setVisible, isCreate }) => {
   const [tags, setTags] = useState([]);
   const { token } = useAuth();
 
-  const handleUploadFile = async () => {
-    const formData = new FormData();
-    formData.append("file", []);
-    fileList.forEach((file) => {
-      // console.log(file);
-      formData.append("file", fileList);
-    });
-    setUploadLoading(true);
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/notes/create`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      toast.success("Your file uploaded successfully!");
-      setUploadLoading(false);
-      getObjects();
-    } catch (err) {
-      toast.error("An error accured");
-      setUploadLoading(false);
-    }
+  // const handleUploadFile = async () => {
+  //   const formData = new FormData();
+  //   formData.append("file", []);
+  //   fileList.forEach((file) => {
+  //     // console.log(file);
+  //     formData.append("file", fileList);
+  //   });
+  //   setUploadLoading(true);
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/notes/create`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     toast.success("Your file uploaded successfully!");
+  //     setUploadLoading(false);
+  //     getObjects();
+  //   } catch (err) {
+  //     toast.error("An error accured");
+  //     setUploadLoading(false);
+  //   }
 
-    setVisible(false);
-    setFileList([]);
-  };
+  //   setVisible(false);
+  //   setFileList([]);
+  // };
 
   const handleCancel = () => {
     setVisible(false);
   };
+
+  useEffect(() => {
+    if (isUpdate) {
+      setData(object);
+    }
+  }, [object]);
 
   const handleOk = async () => {
     setUploadLoading(true);
@@ -95,6 +101,27 @@ const Note = ({ visible, setVisible, isCreate }) => {
         setData({});
         setFileList([]);
       }
+    } else if(isUpdate){
+       try {
+         await axios.put(
+           `${process.env.NEXT_PUBLIC_BASE_URL}/notes/update/${data.id}/?edit_key=${data.edit_key}`,
+           postData,
+           {
+             headers: {
+               "Content-Type": "multipart/form-data",
+               Authorization: `Bearer ${token}`,
+             },
+           }
+         );
+         toast.success("Your note edited successfully!");
+       } catch (err) {
+         toast.error(err.message);
+       } finally {
+         setUploadLoading(false);
+         setVisible(false);
+        //  setData({});
+        //  setFileList([]);
+       }
     }
   };
   const props = {
