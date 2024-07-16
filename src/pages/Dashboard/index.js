@@ -31,7 +31,6 @@ import { useAuth } from "@/contexts/AuthContext";
 // import MyModal from "@/components/Inputs/Editor";
 import Note from "@/components/Modals/Note";
 
-
 const Dashboard = () => {
   // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
@@ -40,7 +39,6 @@ const Dashboard = () => {
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const [totalObjects, setTotalObj] = useState(0);
-
 
   // const getUser = async () => {
   //   try {
@@ -64,33 +62,15 @@ const Dashboard = () => {
       toast.error(err.message);
     }
   };
-  const calculateTotalSize = (array) => {
-    if (array.length > 0) {
-      return array.reduce((total, item) => {
-        console.log(item);
-        return (
-          Math.round((total + (item.size || 0) / (1024 * 1024 * 1024)) * 100) /
-          100
-        );
-      }, 0);
-    }
-    return 0;
-  };
-
-  useEffect(() => {
-    if (objects != undefined) {
-      const size = calculateTotalSize(objects);
-      setTotalSize(size);
-    }
-  }, [objects]);
+ 
+ 
   const showModal = () => {
     setVisible(true);
   };
 
-  
   return (
     <main className="bg-white h-full md:h-screen p-5 ">
-  <Note visible={visible} setVisible={setVisible} />
+      <Note visible={visible} setVisible={setVisible} />
       {/* <Modal
         title="Upload"
         open={visible}
@@ -146,7 +126,7 @@ const Dashboard = () => {
               className="rounded-full bg-primary-1000"
               icon={<CloudUploadOutlined />}
             >
-              Upload
+              New Note
             </Button>
             <Col>
               <Row justify="center" className="gap-2 items-center">
@@ -158,15 +138,8 @@ const Dashboard = () => {
         </Col>
       </Row>
       <Flex className=" mt-10 flex flex-col justify-start p-5 w-full min-h-10 gap-5 items-start rounded-xl bg-grey-1000 px-5 py-10 shadow-lg">
-        <Typography className="text-5xl font-bold">Objects</Typography>
-        <Typography className=" text-lg">
-          Total:
-          <Typography className="font-semibold inline">
-            {" "}
-            {totalSize}
-            GB
-          </Typography>{" "}
-        </Typography>
+        <Typography className="text-5xl font-bold">All Notes</Typography>
+    
         <Row gutter={[20, 16]} className="w-full">
           {objects.map((object, index) => (
             <Col md={6} sm={12} xs={24} key={index}>
