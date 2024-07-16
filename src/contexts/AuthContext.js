@@ -38,9 +38,7 @@ export const AuthProvider = ({ children }) => {
       router.push("/");
     } catch (err) {
       toast.error(err.message);
-    } finally {
-      // getUser();
-    }
+    } 
   };
 
   const logout = () => {

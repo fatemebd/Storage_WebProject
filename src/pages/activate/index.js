@@ -16,14 +16,14 @@ const Activate = () => {
       const response = await PostActivation(token);
       setLoading(false);
       toast.success("Activation was successful, You will redirect to login.");
-      router.push("/login");
+      // router.push("/login");
     } catch (err) {
       toast.error(err.message);
     }
   };
   useEffect(() => {
     if (activation) {
-      activeUser(activation);
+      activeUser({ token: activation.split('/')[0] });
     }
   }, [activation]);
 

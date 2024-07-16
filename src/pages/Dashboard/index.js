@@ -32,6 +32,7 @@ import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 // import MyModal from "@/components/Inputs/Editor";
 import Note from "@/components/Modals/Note";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
   // const [user, setUser] = useState({});
@@ -41,6 +42,8 @@ const Dashboard = () => {
   const [objects, setObjects] = useState([]);
   const [totalSize, setTotalSize] = useState(0);
   const [totalObjects, setTotalObj] = useState(0);
+  const router = useRouter();
+
   const items = [
     {
       key: 1,
@@ -50,7 +53,7 @@ const Dashboard = () => {
       onClick: () => {
         logout();
 
-        cookies.remove("access_token");
+        // cookies.remove("access_token");
         // navigate("/");
       },
     },
@@ -59,10 +62,19 @@ const Dashboard = () => {
       danger: true,
       label: "Delete Aaccount",
       // icon: <IoExitOutline size={20} />,
-      onClick: () => {
-        DeleteAccount();
+      onClick: async () => {
+        try {
+          const response = await DeleteAccount();
+          localStorage.removeItem("token");
+
+          toast.success(
+            "Your account deleted succussfully, you will be redirect to main page."
+          );
+          window.location.reload();
+        } catch (err) {
+          toast.error(err.message);
+        }
         // cookies.remove("access_token");
-        // navigate("/");
       },
     },
   ];
