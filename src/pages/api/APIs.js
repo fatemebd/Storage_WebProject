@@ -31,3 +31,6 @@ export const DownloadUrl = async (id) => {
 export const DeleteAccount = async () => {
   return callApi(`/user/details/`, null, "delete");
 };
+export const CreateNote = async (data) => {
+  return callApi(`/notes/create/`, data, "post");
+};

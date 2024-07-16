@@ -15,12 +15,7 @@ import {
   Avatar,
   Dropdown,
 } from "antd";
-import {
-  SearchOutlined,
-  CloudUploadOutlined,
-  InboxOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
@@ -35,12 +30,11 @@ import Note from "@/components/Modals/Note";
 import { useRouter } from "next/router";
 
 const Dashboard = () => {
-  // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
+  const { user, logout } = useAuth();
   const { token, getUser, user, logout } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
-  const [totalSize, setTotalSize] = useState(0);
   const [totalObjects, setTotalObj] = useState(0);
   const router = useRouter();
 
@@ -49,7 +43,8 @@ const Dashboard = () => {
       key: 1,
       danger: true,
       label: "Log Out",
-      // icon: <IoExitOutline size={20} />,
+
+
       onClick: () => {
         logout();
 
@@ -61,7 +56,7 @@ const Dashboard = () => {
       key: 2,
       danger: true,
       label: "Delete Aaccount",
-      // icon: <IoExitOutline size={20} />,
+
       onClick: async () => {
         try {
           const response = await DeleteAccount();
@@ -74,7 +69,7 @@ const Dashboard = () => {
         } catch (err) {
           toast.error(err.message);
         }
-        // cookies.remove("access_token");
+
       },
     },
   ];
@@ -95,41 +90,8 @@ const Dashboard = () => {
 
   return (
     <main className="bg-white h-full md:h-screen p-5 ">
-      <Note visible={visible} setVisible={setVisible} />
-      {/* <Modal
-        title="Upload"
-        open={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={
-          <Button
-            disabled={uploadLoading}
-            className="mt-3"
-            type="primary"
-            onClick={handleOk}
-          >
-            {uploadLoading ? "Uploading" : "Upload"}
-            {uploadLoading && (
-              <Spin indicator={<LoadingOutlined spin />} size="small" />
-            )}
-          </Button>
-        }
-      >
-        <MyModal
-          visible={visible}
-          onClose={() => setVisible(false)}
-          initialText={text}
-          onSave={setTesxt}
-        ></MyModal>
-        <Dragger {...props}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click to pick a file, or simply drag and drop{" "}
-          </p>
-        </Dragger>
-      </Modal> */}
+      <Note isCreate={true} visible={visible} setVisible={setVisible} />
+
       <Row className="items-center" gutter={[16, 16]}>
         <Col md={8}>
           <Image md={6} src={logo} className="bg-transparent" />
@@ -149,7 +111,7 @@ const Dashboard = () => {
               onClick={showModal}
               type="primary"
               className="rounded-full bg-primary-1000"
-              icon={<CloudUploadOutlined />}
+              icon={<EditOutlined />}
             >
               New Note
             </Button>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Modal, Spin } from "antd";
+import { Button, Col, Input, Modal, Spin } from "antd";
 import {
   SearchOutlined,
   CloudUploadOutlined,
@@ -12,16 +12,22 @@ const Editor = dynamic(() => import("@/components/Inputs/Editor"), {
   ssr: false,
 });
 import Tags from "../Display/Tags";
-const Note = ({ visible, setVisible }) => {
+import Typography from "antd/es/typography/Typography";
+import { CreateNote } from "@/pages/api/APIs";
+import toast from "react-hot-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
+const Note = ({ visible, setVisible, isCreate }) => {
   const [fileList, setFileList] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
-  const [text, setTesxt] = useState("hiiiiiiiiii");
+  const [data, setData] = useState({});
   const [hasFile, setHasFile] = useState(false);
   const [tags, setTags] = useState([]);
+  const { token } = useAuth();
 
   const handleUploadFile = async () => {
     const formData = new FormData();
-    console.log(fileList);
+    formData.append("file", []);
     fileList.forEach((file) => {
       // console.log(file);
       formData.append("file", fileList);
@@ -29,12 +35,12 @@ const Note = ({ visible, setVisible }) => {
     setUploadLoading(true);
     try {
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/objects/`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notes/create`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Token ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -54,7 +60,47 @@ const Note = ({ visible, setVisible }) => {
     setVisible(false);
   };
 
-  const handleOk = async () => {};
+  const handleOk = async () => {
+    setUploadLoading(true);
+    const postData = new FormData();
+    // postData.append(data);
+    // postData = data;
+    postData.append("title", data.title);
+    postData.append("content", data.content);
+    if (data.tags) {
+      postData.append("tags", data.tags);
+    }
+    if (fileList.length > 0) {
+      fileList.forEach((file, index) => {
+        // console.log(file);
+        postData.append(`files`, file);
+      });
+    }
+
+    if (isCreate) {
+      try {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/notes/create/`,
+          postData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // const response = await CreateNote(data);
+        toast.success("Your note created successfully!");
+      } catch (err) {
+        toast.error(err.message);
+      } finally {
+        setUploadLoading(false);
+        setVisible(false);
+        setData({});
+        setFileList([]);
+      }
+    }
+  };
   const props = {
     name: "file",
     // className: "mt-5",
@@ -67,6 +113,15 @@ const Note = ({ visible, setVisible }) => {
       setFileList(null);
     },
   };
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+  // useEffect(() => {
+  //   if (fileList.length > 0) {
+  //     setData({ ...data, files: fileList });
+  //   }
+  // }, [fileList]);
+
   useEffect(() => {
     console.log(fileList);
     if (fileList.length > 0) {
@@ -97,13 +152,24 @@ const Note = ({ visible, setVisible }) => {
       }
     >
       <Col className="flex flex-col gap-2">
+        <Typography className="font-bold mt-2">Title</Typography>
+        <Input
+          value={data.title}
+          onChange={(e) => setData({ ...data, title: e.target.value })}
+        ></Input>
+        <Typography className="font-bold mt-2">Content</Typography>
+
         <Editor
           className="mb-5"
           visible={visible}
           onClose={() => setVisible(false)}
-          initialText={text}
-          onSave={setTesxt}
+          initialText={data.content}
+          setText={(v) => setData({ ...data, content: v })}
         ></Editor>
+        <Tags
+          tags={data.tags ? data.tags : []}
+          setTags={(v) => setData({ ...data, tags: v })}
+        />
         <Dragger {...props}>
           <p className="ant-upload-drag-icon">
             <InboxOutlined />
@@ -112,7 +178,6 @@ const Note = ({ visible, setVisible }) => {
             Click to pick a file, or simply drag and drop{" "}
           </p>
         </Dragger>
-        <Tags tags={tags} setTags={setTags} />
       </Col>
     </Modal>
   );
