@@ -12,13 +12,10 @@ import {
   Pagination,
   Row,
   Typography,
+  Avatar,
+  Dropdown,
 } from "antd";
-import {
-  SearchOutlined,
-  CloudUploadOutlined,
-  InboxOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
@@ -32,26 +29,40 @@ import { useAuth } from "@/contexts/AuthContext";
 import Note from "@/components/Modals/Note";
 
 const Dashboard = () => {
-  // const [user, setUser] = useState({});
   const [visible, setVisible] = useState(false);
-  const { token, getUser, user } = useAuth();
+  const { user, logout } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
-  const [totalSize, setTotalSize] = useState(0);
   const [totalObjects, setTotalObj] = useState(0);
 
-  // const getUser = async () => {
-  //   try {
-  //     const response = await GetUser();
-  //     console.log(response);
-  //     setUser(response.data.user);
-  //   } catch (err) {
-  //     toast.error(err.message);
-  //   }
-  // };
-  // useEffect(() => {
-  //   getUser();
-  // }, [token]);
+  const items = [
+    {
+      key: 1,
+      danger: true,
+      label: "Log Out",
+      onClick: () => {
+        logout();
+      },
+    },
+    {
+      key: 2,
+      danger: true,
+      label: "Delete Aaccount",
+      onClick: async () => {
+        try {
+          const response = await DeleteAccount();
+          localStorage.removeItem("token");
+
+          toast.success(
+            "Your account deleted succussfully, you will be redirect to main page."
+          );
+          window.location.reload();
+        } catch (err) {
+          toast.error(err.message);
+        }
+      },
+    },
+  ];
   const getObjects = async () => {
     try {
       const response = await GetObjects(page);
@@ -62,49 +73,15 @@ const Dashboard = () => {
       toast.error(err.message);
     }
   };
- 
- 
+
   const showModal = () => {
     setVisible(true);
   };
 
   return (
     <main className="bg-white h-full md:h-screen p-5 ">
-      <Note visible={visible} setVisible={setVisible} />
-      {/* <Modal
-        title="Upload"
-        open={visible}
-        onOk={handleOk}
-        onCancel={handleCancel}
-        footer={
-          <Button
-            disabled={uploadLoading}
-            className="mt-3"
-            type="primary"
-            onClick={handleOk}
-          >
-            {uploadLoading ? "Uploading" : "Upload"}
-            {uploadLoading && (
-              <Spin indicator={<LoadingOutlined spin />} size="small" />
-            )}
-          </Button>
-        }
-      >
-        <MyModal
-          visible={visible}
-          onClose={() => setVisible(false)}
-          initialText={text}
-          onSave={setTesxt}
-        ></MyModal>
-        <Dragger {...props}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click to pick a file, or simply drag and drop{" "}
-          </p>
-        </Dragger>
-      </Modal> */}
+      <Note isCreate={true} visible={visible} setVisible={setVisible} />
+
       <Row className="items-center" gutter={[16, 16]}>
         <Col md={8}>
           <Image md={6} src={logo} className="bg-transparent" />
@@ -124,13 +101,19 @@ const Dashboard = () => {
               onClick={showModal}
               type="primary"
               className="rounded-full bg-primary-1000"
-              icon={<CloudUploadOutlined />}
+              icon={<EditOutlined />}
             >
               New Note
             </Button>
             <Col>
               <Row justify="center" className="gap-2 items-center">
-                <Image width={45} src={avatar} className="rounded-full" />
+                <Dropdown key="1" menu={{ items }} trigger={["click"]}>
+                  <Avatar
+                    src={
+                      <Image width={45} src={avatar} className="rounded-full" />
+                    }
+                  />
+                </Dropdown>
                 <Typography>{user?.username}</Typography>
               </Row>
             </Col>
@@ -139,7 +122,7 @@ const Dashboard = () => {
       </Row>
       <Flex className=" mt-10 flex flex-col justify-start p-5 w-full min-h-10 gap-5 items-start rounded-xl bg-grey-1000 px-5 py-10 shadow-lg">
         <Typography className="text-5xl font-bold">All Notes</Typography>
-    
+
         <Row gutter={[20, 16]} className="w-full">
           {objects.map((object, index) => (
             <Col md={6} sm={12} xs={24} key={index}>

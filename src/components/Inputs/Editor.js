@@ -21,7 +21,7 @@ import {
 
 import "ckeditor5/ckeditor5.css";
 
-export default function App({ initialText }) {
+export default function App({ initialText, setText }) {
   const editorContainerRef = useRef(null);
   const editorRef = useRef(null);
   const [isLayoutReady, setIsLayoutReady] = useState(false);
@@ -98,7 +98,7 @@ export default function App({ initialText }) {
                 <CKEditor
                   onChange={(event, editor) => {
                     const data = editor.getData();
-                    console.log({ event, editor, data });
+                    setText(data.replace("<p>", "").replace("</p>", ""));
                   }}
                   editor={ClassicEditor}
                   config={editorConfig}
