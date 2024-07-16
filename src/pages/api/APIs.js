@@ -10,8 +10,8 @@ export const Register = async (data) => {
 export const GetUser = async () => {
   return callApi("/user/details/", null, "get");
 };
-export const PostActivation = async (token) => {
-  return callApi(`/accounts/activate/?activation=${token}`, null, "get");
+export const PostActivation = async (data) => {
+  return callApi(`/user/verify/`, data, "post");
 };
 export const GetObjects = async (page) => {
   return callApi(`objects/?page=${page}`, null, "get");
@@ -27,4 +27,7 @@ export const DeleteObject = async (id) => {
 };
 export const DownloadUrl = async (id) => {
   return callApi(`/objects/${id}`, null, "get");
+};
+export const DeleteAccount = async () => {
+  return callApi(`/user/details/`, null, "delete");
 };
