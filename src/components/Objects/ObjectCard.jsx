@@ -27,13 +27,14 @@ import other from "../../../public/logo/Others file.png";
 import UsersList from "../Modals/UsersList";
 import { DeleteObject, DownloadUrl } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
+import Note from "../Modals/Note";
 const ObjectCard = ({ object }) => {
   const [icon, setIcon] = useState();
   const [items, setItems] = useState([]);
   const [shareOpen, setShareOpen] = useState(false);
   const [selected, setSelected] = useState([]);
   const [shareUrl, setShareUrl] = useState();
-
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
     // console.log(object);
     // if (object.is_owner) {
@@ -110,7 +111,9 @@ const ObjectCard = ({ object }) => {
       key: "2",
       icon: <EditOutlined className="text-[#7288FA]" />,
       label: "Edit",
-
+      onClick: () => {
+        setVisible(true);
+      },
       //   icon: <SmileOutlined />,
     },
     {
@@ -135,6 +138,14 @@ const ObjectCard = ({ object }) => {
       align="center"
       justify="space-between"
     >
+      <Note
+        isUpdate={true}
+        isCreate={false}
+        visible={visible}
+        setVisible={setVisible}
+        object={object}
+      />
+
       {/* <Col>
         <Flex className="p-2 rounded-full bg-[#F1F4FF] ">
           <Image src={icon} />

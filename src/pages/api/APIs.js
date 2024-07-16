@@ -16,6 +16,9 @@ export const PostActivation = async (data) => {
 export const GetObjects = async () => {
   return callApi(`/notes/`, null, "get");
 };
+export const GetNote = async (id) => {
+  return callApi(`/notes/${id}`, null, "get");
+};
 export const GetAllUsers = async () => {
   return callApi(`/accounts/users/`, null, "get");
 };

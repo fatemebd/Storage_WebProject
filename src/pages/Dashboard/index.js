@@ -37,39 +37,6 @@ const Dashboard = () => {
   const [totalObjects, setTotalObj] = useState(0);
   const router = useRouter();
 
-  const items = [
-    {
-      key: 1,
-      danger: true,
-      label: "Log Out",
-
-      onClick: () => {
-        logout();
-
-        // cookies.remove("access_token");
-        // navigate("/");
-      },
-    },
-    {
-      key: 2,
-      danger: true,
-      label: "Delete Aaccount",
-
-      onClick: async () => {
-        try {
-          const response = await DeleteAccount();
-          localStorage.removeItem("token");
-
-          toast.success(
-            "Your account deleted succussfully, you will be redirect to main page."
-          );
-          window.location.reload();
-        } catch (err) {
-          toast.error(err.message);
-        }
-      },
-    },
-  ];
   const getObjects = async () => {
     try {
       const response = await GetObjects();
@@ -89,7 +56,6 @@ const Dashboard = () => {
   return (
     // <main className="bg-white h-full md:h-screen p-5 ">
     <>
-      <Note isCreate={true} visible={visible} setVisible={setVisible} />
       <Typography className="text-5xl font-bold">All Notes</Typography>
 
       <Row gutter={[20, 16]} className="w-full">

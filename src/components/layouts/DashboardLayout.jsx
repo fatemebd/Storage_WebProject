@@ -87,7 +87,9 @@ const DashboardLayout = ({children}) => {
   };
 
   return (
-    <main className="bg-white h-full md:h-screen p-5 ">
+    <main className="bg-white h-screen md:h-screen p-5 ">
+      <Note isCreate={true} visible={visible} setVisible={setVisible} />
+
       <Row className="items-center" gutter={[16, 16]}>
         <Col md={8}>
           <Image md={6} src={logo} className="bg-transparent" />
