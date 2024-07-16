@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Col, Input, Modal, Spin } from "antd";
-import {
-  SearchOutlined,
-  CloudUploadOutlined,
-  InboxOutlined,
-  LoadingOutlined,
-} from "@ant-design/icons";
+import { InboxOutlined, LoadingOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
 import Dragger from "antd/es/upload/Dragger";
 const Editor = dynamic(() => import("@/components/Inputs/Editor"), {
@@ -13,7 +8,6 @@ const Editor = dynamic(() => import("@/components/Inputs/Editor"), {
 });
 import Tags from "../Display/Tags";
 import Typography from "antd/es/typography/Typography";
-import { CreateNote } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
@@ -24,37 +18,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
   const [hasFile, setHasFile] = useState(false);
   const [tags, setTags] = useState([]);
   const { token } = useAuth();
-
-  // const handleUploadFile = async () => {
-  //   const formData = new FormData();
-  //   formData.append("file", []);
-  //   fileList.forEach((file) => {
-  //     // console.log(file);
-  //     formData.append("file", fileList);
-  //   });
-  //   setUploadLoading(true);
-  //   try {
-  //     const response = await axios.post(
-  //       `${process.env.NEXT_PUBLIC_BASE_URL}/notes/create`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       }
-  //     );
-  //     toast.success("Your file uploaded successfully!");
-  //     setUploadLoading(false);
-  //     getObjects();
-  //   } catch (err) {
-  //     toast.error("An error accured");
-  //     setUploadLoading(false);
-  //   }
-
-  //   setVisible(false);
-  //   setFileList([]);
-  // };
 
   const handleCancel = () => {
     setVisible(false);
@@ -101,32 +64,29 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
         setData({});
         setFileList([]);
       }
-    } else if(isUpdate){
-       try {
-         await axios.put(
-           `${process.env.NEXT_PUBLIC_BASE_URL}/notes/update/${data.id}/?edit_key=${data.edit_key}`,
-           postData,
-           {
-             headers: {
-               "Content-Type": "multipart/form-data",
-               Authorization: `Bearer ${token}`,
-             },
-           }
-         );
-         toast.success("Your note edited successfully!");
-       } catch (err) {
-         toast.error(err.message);
-       } finally {
-         setUploadLoading(false);
-         setVisible(false);
-        //  setData({});
-        //  setFileList([]);
-       }
+    } else if (isUpdate) {
+      try {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/notes/update/${data.id}/?edit_key=${data.edit_key}`,
+          postData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        toast.success("Your note edited successfully!");
+      } catch (err) {
+        toast.error(err.message);
+      } finally {
+        setUploadLoading(false);
+        setVisible(false);
+      }
     }
   };
   const props = {
     name: "file",
-    // className: "mt-5",
     multiple: true,
     beforeUpload: (file) => {
       setFileList([...fileList, file]);
@@ -136,14 +96,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
       setFileList(null);
     },
   };
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-  // useEffect(() => {
-  //   if (fileList.length > 0) {
-  //     setData({ ...data, files: fileList });
-  //   }
-  // }, [fileList]);
 
   useEffect(() => {
     console.log(fileList);
@@ -158,7 +110,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
     <Modal
       title="New Note"
       open={visible}
-      // onOk={handleOk}
       onCancel={handleCancel}
       footer={
         <Button

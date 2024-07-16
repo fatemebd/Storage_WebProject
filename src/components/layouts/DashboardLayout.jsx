@@ -3,39 +3,39 @@ import logo from "../../../public/logo/header_logo.svg";
 import avatar from "../../../public/Avatar.png";
 
 import {
-  Spin,
   Button,
   Col,
   Flex,
   Input,
-  Modal,
-  Pagination,
   Row,
   Typography,
   Avatar,
   Dropdown,
 } from "antd";
-import { SearchOutlined, EditOutlined } from "@ant-design/icons";
-import dynamic from "next/dynamic";
+import {
+  SearchOutlined,
+  EditOutlined,
+  DownloadOutlined,
+} from "@ant-design/icons";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { DeleteAccount, GetObjects, GetUser, PostObject } from "@/pages/api/APIs";
-import ObjectCard from "@/components/Objects/ObjectCard";
-import Dragger from "antd/es/upload/Dragger";
-import axios from "axios";
+import { Backup, DeleteAccount } from "@/pages/api/APIs";
 import { useAuth } from "@/contexts/AuthContext";
-// import MyModal from "@/components/Inputs/Editor";
 import Note from "@/components/Modals/Note";
-import { useRouter } from "next/router";
 
-const DashboardLayout = ({children}) => {
+const DashboardLayout = ({ children }) => {
   const [visible, setVisible] = useState(false);
   const { user, logout } = useAuth();
-  const [page, setPage] = useState(1);
-  const [objects, setObjects] = useState([]);
-  const [totalObjects, setTotalObj] = useState(0);
-  const router = useRouter();
+
+  const backupHandler = async () => {
+    try {
+      const response = await Backup();
+      console.log(response);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   const items = [
     {
@@ -45,9 +45,6 @@ const DashboardLayout = ({children}) => {
 
       onClick: () => {
         logout();
-
-        // cookies.remove("access_token");
-        // navigate("/");
       },
     },
     {
@@ -70,18 +67,7 @@ const DashboardLayout = ({children}) => {
       },
     },
   ];
-//   const getObjects = async () => {
-//     try {
-//       const response = await GetObjects();
-//       setObjects(response.data);
-//       console.log(response.data.objects);
-//     } catch (err) {
-//       toast.error(err.message);
-//     }
-//   };
-//   useEffect(() => {
-//     getObjects();
-//   }, []);
+
   const showModal = () => {
     setVisible(true);
   };
@@ -106,6 +92,13 @@ const DashboardLayout = ({children}) => {
         <Col md={6}>
           <Row justify="end" className="gap-5 items-center">
             <Button
+              onClick={backupHandler}
+              className="rounded-full"
+              icon={<DownloadOutlined />}
+            >
+              Backup
+            </Button>
+            <Button
               onClick={showModal}
               type="primary"
               className="rounded-full bg-primary-1000"
@@ -113,6 +106,7 @@ const DashboardLayout = ({children}) => {
             >
               New Note
             </Button>
+
             <Col>
               <Row justify="center" className="gap-2 items-center">
                 <Dropdown key="1" menu={{ items }} trigger={["click"]}>
