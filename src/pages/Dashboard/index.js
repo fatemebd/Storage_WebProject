@@ -32,7 +32,6 @@ import { useRouter } from "next/router";
 const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const { user, logout } = useAuth();
-  const { token, getUser, user, logout } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
   const [totalObjects, setTotalObj] = useState(0);

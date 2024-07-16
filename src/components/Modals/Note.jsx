@@ -63,8 +63,6 @@ const Note = ({ visible, setVisible, isCreate }) => {
   const handleOk = async () => {
     setUploadLoading(true);
     const postData = new FormData();
-    // postData.append(data);
-    // postData = data;
     postData.append("title", data.title);
     postData.append("content", data.content);
     if (data.tags) {
@@ -72,7 +70,6 @@ const Note = ({ visible, setVisible, isCreate }) => {
     }
     if (fileList.length > 0) {
       fileList.forEach((file, index) => {
-        // console.log(file);
         postData.append(`files`, file);
       });
     }
@@ -89,7 +86,6 @@ const Note = ({ visible, setVisible, isCreate }) => {
             },
           }
         );
-        // const response = await CreateNote(data);
         toast.success("Your note created successfully!");
       } catch (err) {
         toast.error(err.message);
