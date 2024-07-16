@@ -20,34 +20,43 @@ import dynamic from "next/dynamic";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { GetObjects, GetUser, PostObject } from "../api/APIs";
+import { DeleteAccount, GetObjects, GetUser, PostObject } from "../api/APIs";
 import ObjectCard from "@/components/Objects/ObjectCard";
 import Dragger from "antd/es/upload/Dragger";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 // import MyModal from "@/components/Inputs/Editor";
 import Note from "@/components/Modals/Note";
+import { useRouter } from "next/router";
 
 const Dashboard = () => {
   const [visible, setVisible] = useState(false);
   const { user, logout } = useAuth();
+  const { token, getUser, user, logout } = useAuth();
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
   const [totalObjects, setTotalObj] = useState(0);
+  const router = useRouter();
 
   const items = [
     {
       key: 1,
       danger: true,
       label: "Log Out",
+
+
       onClick: () => {
         logout();
+
+        // cookies.remove("access_token");
+        // navigate("/");
       },
     },
     {
       key: 2,
       danger: true,
       label: "Delete Aaccount",
+
       onClick: async () => {
         try {
           const response = await DeleteAccount();
@@ -60,6 +69,7 @@ const Dashboard = () => {
         } catch (err) {
           toast.error(err.message);
         }
+
       },
     },
   ];

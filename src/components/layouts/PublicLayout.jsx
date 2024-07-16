@@ -12,11 +12,11 @@ const PublicLayout = ({ children }) => {
       >
         <Image src={logo} />
         <Typography className="text-5xl	font-extrabold	text-white">
-          Manage your files the best way
+          Manage your Notes the best way
         </Typography>
         <Typography className="text-base text-white	">
           Awesome, we've created the perfect place for you to store all your
-          documents.
+          notes.
         </Typography>
         <Image alt="illustration" src={illustration} width={300} height={300} />
       </Col>
