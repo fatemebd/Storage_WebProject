@@ -111,6 +111,7 @@ const DashboardLayout = ({ children }) => {
               <Row justify="center" className="gap-2 items-center">
                 <Dropdown key="1" menu={{ items }} trigger={["click"]}>
                   <Avatar
+                  className="cursor-pointer"
                     src={
                       <Image width={45} src={avatar} className="rounded-full" />
                     }
