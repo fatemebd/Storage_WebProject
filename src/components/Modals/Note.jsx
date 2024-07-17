@@ -15,8 +15,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
   const [fileList, setFileList] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [data, setData] = useState({});
-  const [hasFile, setHasFile] = useState(false);
-  const [tags, setTags] = useState([]);
   const { token } = useAuth();
 
   const handleCancel = () => {
@@ -25,7 +23,12 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
 
   useEffect(() => {
     if (isUpdate) {
-      setData(object);
+      const note = {
+        ...object,
+        tags: object.tags.length > 0 ? object.tags.map((tag) => tag.tag) : [],
+      };
+      console.log(note);
+      setData(note);
     }
   }, [object]);
 
@@ -85,6 +88,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
       }
     }
   };
+
   const props = {
     name: "file",
     multiple: true,
@@ -97,14 +101,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
     },
   };
 
-  useEffect(() => {
-    console.log(fileList);
-    if (fileList.length > 0) {
-      setHasFile(true);
-    } else {
-      setHasFile(false);
-    }
-  }, [fileList]);
 
   return (
     <Modal
