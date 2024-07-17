@@ -37,7 +37,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
     const postData = new FormData();
     postData.append("title", data.title);
     postData.append("content", data.content);
-    if (data.tags) {
+    if (data.tags.length > 0) {
       postData.append("tags", data.tags);
     }
     if (fileList.length > 0) {
@@ -66,6 +66,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
         setVisible(false);
         setData({});
         setFileList([]);
+        window.location.reload();
       }
     } else if (isUpdate) {
       try {
@@ -80,6 +81,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
           }
         );
         toast.success("Your note edited successfully!");
+        window.location.reload();
       } catch (err) {
         toast.error(err.message);
       } finally {
@@ -100,7 +102,6 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
       setFileList(null);
     },
   };
-
 
   return (
     <Modal
