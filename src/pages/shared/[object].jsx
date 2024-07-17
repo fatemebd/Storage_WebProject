@@ -8,6 +8,7 @@ import avatar from "../../../public/Avatar.png";
 import { SearchOutlined, EditOutlined } from "@ant-design/icons";
 import { GetNote } from "../api/APIs";
 import toast from "react-hot-toast";
+import ObjectCard from "@/components/Objects/ObjectCard";
 
 const Shared = () => {
   const object = useRouter().query.object;
@@ -19,7 +20,7 @@ const Shared = () => {
   const getNotee = async (id) => {
     try {
       const response = await GetNote(id);
-      setNote(response.data);
+      setNote(response.data.note);
       console.log(response.data);
     } catch (err) {
       toast.error(err.message);
@@ -27,8 +28,7 @@ const Shared = () => {
   };
 
   useEffect(() => {
-    if(object){
-
+    if (object) {
       const IDs = object.split("_");
       setNoteId(IDs[0]);
       setEditId(IDs[1]);
@@ -37,12 +37,14 @@ const Shared = () => {
     }
   }, [object]);
 
-  
   return (
     <>
-      <Typography className="text-5xl font-bold">All Notes</Typography>
-      hiiiiiiiiiiiiii
-      <Row gutter={[20, 16]} className="w-full"></Row>
+      <Typography className="text-5xl font-bold">Share Note</Typography>
+      <Row gutter={[20, 16]} className="w-full">
+        <Col md={6} sm={12} xs={24} >
+          <ObjectCard object={note} />
+        </Col>
+      </Row>
     </>
   );
 };

@@ -25,7 +25,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
     if (isUpdate) {
       const note = {
         ...object,
-        tags: object.tags.length > 0 ? object.tags.map((tag) => tag.tag) : [],
+        tags: object?.tags?.length > 0 ? object.tags.map((tag) => tag.tag) : [],
       };
       console.log(note);
       setData(note);
