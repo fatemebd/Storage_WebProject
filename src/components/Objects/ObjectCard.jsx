@@ -10,12 +10,15 @@ const { Paragraph } = Typography;
 import { DeleteObject } from "@/pages/api/APIs";
 import toast from "react-hot-toast";
 import Note from "../Modals/Note";
+import { useRouter } from "next/router";
 
 const ObjectCard = ({ object }) => {
   const [items, setItems] = useState([]);
   const [shareOpen, setShareOpen] = useState(false);
   const [shareUrl, setShareUrl] = useState();
   const [visible, setVisible] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     setItems(ownerItems);
@@ -49,9 +52,13 @@ const ObjectCard = ({ object }) => {
       onClick: async () => {
         console.log(object.object_id);
         try {
-          const response = DeleteObject(object.object_id);
+          const response = await DeleteObject(object.id);
           toast.success("Object deleted successfully!");
-          window.location.reload();
+          // router.push("/");
+          console.log(response);
+          if (response.status === 204) {
+            window.location.reload();
+          }
         } catch (err) {
           toast.error(err.message);
         }

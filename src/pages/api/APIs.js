@@ -20,7 +20,7 @@ export const GetNote = async (id) => {
   return callApi(`/notes/${id}`, null, "get");
 };
 export const DeleteObject = async (id) => {
-  return callApi(`/objects/${id}`, null, "delete");
+  return callApi(`notes/delete/${id}`, null, "delete");
 };
 export const DownloadUrl = async (id) => {
   return callApi(`/objects/${id}`, null, "get");
