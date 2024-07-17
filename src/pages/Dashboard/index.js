@@ -1,14 +1,15 @@
-import { Col, Pagination, Row, Typography } from "antd";
+import { Col, Pagination, Row, Tag, Typography } from "antd";
 
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { GetObjects } from "../api/APIs";
+import { Filter, GetObjects, GetTags } from "../api/APIs";
 import ObjectCard from "@/components/Objects/ObjectCard";
 
 const Dashboard = () => {
   const [page, setPage] = useState(1);
   const [objects, setObjects] = useState([]);
-
+  const [tags, setTags] = useState([]);
+  const [filter, setFilter] = useState("");
   const getObjects = async () => {
     try {
       const response = await GetObjects();
@@ -18,15 +19,54 @@ const Dashboard = () => {
       toast.error(err.message);
     }
   };
+
+  const getTags = async () => {
+    try {
+      const response = await GetTags();
+      setTags(response.data.tags);
+      console.log(response.data.objects);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const filterNotes = async (tag) => {
+    try {
+      const response = await Filter(tag);
+       setObjects(response.data);
+      console.log(response.data.objects);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
     getObjects();
+    getTags();
   }, []);
+
+  useEffect(() => {
+    if (filter !== "") {
+      filterNotes(filter);
+    }
+  }, [filter]);
 
   return (
     <>
       <Row className="flex items-center justify-between w-full">
         <Col>
           <Typography className="text-5xl font-bold">All Notes</Typography>
+        </Col>
+        <Col>
+          {tags.map((tag) => (
+            <Tag.CheckableTag
+              className="rounded-full"
+              onClick={() => setFilter(tag)}
+              checked={filter === tag}
+            >
+              {tag}
+            </Tag.CheckableTag>
+          ))}
         </Col>
       </Row>
 

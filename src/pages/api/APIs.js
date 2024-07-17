@@ -34,3 +34,10 @@ export const CreateNote = async (data) => {
 export const Backup = async () => {
   return callApi(`/user/backup/`, null, "get");
 };
+
+export const GetTags = async () => {
+  return callApi(`/tags/user/list/`, null, "get");
+};
+export const Filter = async (tag) => {
+  return callApi(`/tags/notes/filter/?tag=${tag}`, null, "get");
+};
