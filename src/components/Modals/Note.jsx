@@ -15,13 +15,14 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
   const [fileList, setFileList] = useState([]);
   const [uploadLoading, setUploadLoading] = useState(false);
   const [data, setData] = useState({});
-  const { token } = useAuth();
+  const { token,user } = useAuth();
 
   const handleCancel = () => {
     setVisible(false);
   };
 
   useEffect(() => {
+    console.log(user);
     if (isUpdate) {
       const note = {
         ...object,
@@ -70,6 +71,7 @@ const Note = ({ visible, setVisible, isCreate, object, isUpdate }) => {
       }
     } else if (isUpdate) {
       try {
+        console.log(user);
         await axios.put(
           `${process.env.NEXT_PUBLIC_BASE_URL}/notes/update/${data.id}/?edit_key=${data.edit_key}`,
           postData,

@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
   //   }
   // }, [token, router]);
   useEffect(() => {
+    console.log(user);
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);

@@ -16,8 +16,8 @@ export const PostActivation = async (data) => {
 export const GetObjects = async () => {
   return callApi(`/notes/`, null, "get");
 };
-export const GetNote = async (id) => {
-  return callApi(`/notes/${id}`, null, "get");
+export const GetNote = async (id, editKey) => {
+  return callApi(`/notes/${id}/?edit_key=${editKey}`, null, "get");
 };
 export const DeleteObject = async (id) => {
   return callApi(`notes/delete/${id}`, null, "delete");

@@ -17,10 +17,10 @@ const Shared = () => {
   const [editId, setEditId] = useState();
   const [note, setNote] = useState({});
 
-  const getNotee = async (id) => {
+  const getNotee = async (id, editKey) => {
     try {
-      const response = await GetNote(id);
-      setNote(response.data.note);
+      const response = await GetNote(id, editKey);
+      setNote(response.data);
       console.log(response.data);
     } catch (err) {
       toast.error(err.message);
@@ -32,7 +32,7 @@ const Shared = () => {
       const IDs = object.split("_");
       setNoteId(IDs[0]);
       setEditId(IDs[1]);
-      getNotee(IDs[0]);
+      getNotee(IDs[0],IDs[1]);
       console.log(IDs);
     }
   }, [object]);
